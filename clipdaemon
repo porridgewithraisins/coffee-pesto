@@ -18,7 +18,8 @@ if test -z $COFFEE_PESTO_IGNORED_TARGETS; then
     ignored_targets="
     TARGETS TIMESTAMP SAVE_TARGETS MULTIPLE STRING UTF8_STRING TEXT COMPOUND_TEXT text/plain;charset=utf-8
     application/ico image/bmp image/ico image/icon image/jpeg image/tiff image/vnd.microsoft.icon image/x-bmp
-    image/x-ico image/x-icon image/x-MS-bmp image/x-win-bitmap text/ico x-moz-url
+    image/x-ico image/x-icon image/x-MS-bmp image/x-win-bitmap text/ico x-moz-url application/x-qt-image BITMAP
+    image/cur image/jpg image/pbm image/pgm image/ppm image/xbm image/xpm PIXMAP
     "
 else
     ignored_targets=$COFFEE_PESTO_IGNORED_TARGETS
