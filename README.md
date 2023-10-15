@@ -4,6 +4,7 @@ A clipboard manager for linux (X11 only) that
 
 - is tiny, but supports a whole lot of features.
 - supports all kinds of data - rich text, images, files in your file manager - you name it.
+- has a nice gtk frontend
 - has an impressive search feature (search by window, date, day, time)
   - you can even add custom data to the search index!
 - has a configurable and potentially infinite history, regardless of the type of data
@@ -32,7 +33,7 @@ You will need the standard `xdotool` if you don't already have it. You can insta
 
 First, install [this](https://github.com/porridgewithraisins/x11cp) xclip alternative. Why this requires an xclip alternative is explained on that page.
 
-Then, install this program like so
+Then, install this program like so (linking with gtk+-3.0 libraries)
 ```bash
 git clone https://github.com/porridgewithraisins/coffee-pesto
 
