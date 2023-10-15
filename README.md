@@ -18,6 +18,18 @@ TODO: insert demo video
 
 ## How to get
 
+### From the AUR
+TODO: Publish both to AUR.
+
+```bash
+yay -S coffee-pesto # not there yet
+```
+
+### Manually
+
+First, install [this](https://github.com/porridgewithraisins/x11cp) xclip alternative. Why this requires an xclip alternative is explained on that page.
+
+Then, install this program like so
 ```bash
 git clone https://github.com/porridgewithraisins/coffee-pesto
 
@@ -46,7 +58,7 @@ To blacklist windows, create a file (if it does not exist) at `~/.coffeepesto/bl
 
 ### To temporarily pause clipboard history
 
-You just have to create a file `~/.coffeepesto/pause`. Remove that file to resume.
+You just have to create a file `~/.coffeepesto/pause`. Remove that file to resume. No need to restart the background app or anything.
 
 ### Cross-device sync
 
