@@ -28,6 +28,8 @@ yay -S coffee-pesto # not there yet
 
 ### Manually
 
+You will need the standard `xdotool` if you don't already have it. You can install it from your usual repositories.
+
 First, install [this](https://github.com/porridgewithraisins/x11cp) xclip alternative. Why this requires an xclip alternative is explained on that page.
 
 Then, install this program like so
