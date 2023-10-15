@@ -36,6 +36,10 @@ sudo cp clipdaemon chooselisting restorelisting /usr/local/bin
   - the date/day/time you copied it from (in `/usr/bin/date` format), for all types of data
   - (fuzzy) any part of the text itself, for textual data.
 
+### Configure history size
+
+It is 20 by default. Set the `COFFEE_PESTO_MAX_ITEMS` environment variable to change it.
+
 ### Blacklist windows
 
 To blacklist windows, create a file (if it does not exist) at `~/.coffeepesto/blacklist`. In this file, write a _single_ line with a regex (extended grep) matching the names of windows you want to blacklist. For one, you can use this to prevent passwords copied from your password manager from entering your clipboard history, where it would be stored plaintext for anyone to read. You have to avoid partial matches yourself. It is case insensitive.
@@ -54,7 +58,7 @@ You can change the default of `~/.coffeepesto` by setting the `COFFEE_PESTO_DIR`
 
 ### If copying certain things doesn't work
 
-I have ignored certain targets i.e types of data in order to reduce clutter. Most applications work just fine. Suppose you copy something and it doesn't show up in your history. Check if _all_ the available targets for the copied data (Copy it, and run `getcp TARGETS` to check) are being ignored in the `ignored_targets` variable in the `clipdaemon` script.
+I have ignored certain targets i.e types of data in order to reduce clutter. Most applications work just fine. Suppose you copy something and it doesn't show up in your history. Check if _all_ the available targets for the copied data (Copy it, and run `getcp TARGETS` to check) are being ignored in the `ignored_targets` variable in the `clipdaemon` script. If it is, you can define a `COFFEE_PESTO_IGNORED_TARGETS` environment variable to override it.
 
 ## Hacking
 

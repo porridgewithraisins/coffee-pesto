@@ -6,6 +6,7 @@ if test -z $COFFEE_PESTO_DIR; then
     DIR=$HOME/.coffeepesto
 else
     DIR=$COFFEE_PESTO_DIR
+fi
 
 listing_dir=$DIR/h/$1
 args=

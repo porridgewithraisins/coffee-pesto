@@ -6,14 +6,23 @@ if test -z $COFFEE_PESTO_DIR; then
     DIR=$HOME/.coffeepesto
 else
     DIR=$COFFEE_PESTO_DIR
+fi
 
-MAXITEMS=20
-ignored_targets="
- TARGETS TIMESTAMP SAVE_TARGETS MULTIPLE STRING UTF8_STRING TEXT COMPOUND_TEXT text/plain;charset=utf-8
- application/ico image/bmp image/ico image/icon image/jpeg image/tiff image/vnd.microsoft.icon image/x-bmp
- image/x-ico image/x-icon image/x-MS-bmp image/x-win-bitmap text/ico x-moz-url
- "
+if test -z $COFFEE_PESTO_MAX_ITEMS || ! [[ $COFFEE_PESTO_MAX_ITEMS =~ ^[0-9]+$ ]]; then
+    MAXITEMS=20
+else
+    MAXITEMS=$COFFEE_PESTO_MAX_ITEMS
+fi
 
+if test -z $COFFEE_PESTO_IGNORED_TARGETS; then
+    ignored_targets="
+    TARGETS TIMESTAMP SAVE_TARGETS MULTIPLE STRING UTF8_STRING TEXT COMPOUND_TEXT text/plain;charset=utf-8
+    application/ico image/bmp image/ico image/icon image/jpeg image/tiff image/vnd.microsoft.icon image/x-bmp
+    image/x-ico image/x-icon image/x-MS-bmp image/x-win-bitmap text/ico x-moz-url
+    "
+else
+    ignored_targets=$COFFEE_PESTO_IGNORED_TARGETS
+fi
 
 function nextidx {
     i=$(ls $DIR/h 2>/dev/null | tr -d - | sort -n | tail -1)
