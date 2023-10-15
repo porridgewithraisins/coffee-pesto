@@ -225,7 +225,6 @@ int main() {
     gtk_window_set_title(window, "CoffeePesto");
     gtk_window_set_decorated(window, FALSE);
     gtk_window_set_default_size(window, WINDOW_WIDTH, WINDOW_HEIGHT);
-    gtk_window_set_skip_taskbar_hint(window, TRUE);
     g_signal_connect(window, "focus-out-event", gtk_main_quit, NULL);
     g_signal_connect(window, "key-press-event", onescape, NULL);
     gtk_container_add(window, vbox);
