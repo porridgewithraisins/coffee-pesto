@@ -23,6 +23,13 @@ gboolean onclick(GtkEventBox *eventbox, GdkEventButton *event, gpointer unused) 
             return TRUE;
         case 2:
             gchar *listingdir = g_build_filename(historydir, listing, NULL);
+            if (!g_file_trash(g_file_new_for_path(listingdir), NULL, NULL)) {
+                system(g_strconcat("/bin/rm -r ", listingdir, NULL));
+            }
+            gtk_widget_destroy(row);
+            return TRUE;
+        case 3:
+            listingdir = g_build_filename(historydir, listing, NULL);
             gchar *negative = g_strdup_printf("%ld", -strtol(listing, NULL, 10));
             gchar *negative_listingdir = g_build_filename(historydir, negative, NULL);
             if (rename(listingdir, negative_listingdir) != 0) {
@@ -36,13 +43,6 @@ gboolean onclick(GtkEventBox *eventbox, GdkEventButton *event, gpointer unused) 
             gtk_list_box_insert(listbox, updated_row, -1);
             gtk_list_box_invalidate_sort(listbox);
             gtk_widget_show_all(listbox);
-            return TRUE;
-        case 3:
-            listingdir = g_build_filename(historydir, listing, NULL);
-            if (!g_file_trash(g_file_new_for_path(listingdir), NULL, NULL)) {
-                system(g_strconcat("/bin/rm -r ", listingdir, NULL));
-            }
-            gtk_widget_destroy(row);
             return TRUE;
     }
 }
@@ -144,7 +144,7 @@ GtkWidget *render_listing(const gchar *listing) {
     gtk_container_add(row, eventbox);
     g_object_set_data(row, "listing", g_strdup(listing));
     g_object_set_data(row, "index", index_data);
-    gtk_widget_set_tooltip_text(row, "Left click to copy, middle click to pin, right click to delete");
+    gtk_widget_set_tooltip_text(row, "Left click to copy, middle click to delete, right click to pin");
 
     return row;
 }

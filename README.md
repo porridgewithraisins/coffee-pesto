@@ -7,7 +7,8 @@ A clipboard manager for linux (X11 only) that
 - has an impressive search feature (search by window, date, day, time)
   - you can even add custom data to the search index!
 - has a configurable and potentially infinite history, regardless of the type of data
-- can blacklist windows easily
+- can pin items
+- can blacklist apps easily
 - is modular and file-based so you can easily take parts of it and fit it into your existing setup (rofi, dmenu, anything) and is easy to script with
 
 It only touches the clipboard (the one where you ctrl+c and right click copy), not the other X11 stuff.
@@ -42,8 +43,8 @@ sudo cp clipdaemon chooselisting restorelisting /usr/local/bin
 
 - Run `clipdaemon` in the background by adding it to your autostart.
 - Bind `chooselisting | xargs restorelisting` to a keyboard shortcut (such as super+v) and you will get a popup at your mouse for you to choose something from your history.
-- In this popup, you can right click an item to delete it, and double click an item to put it on the clipboard.
-- You can use the search bar to filter items. Out of the box, you can search by
+- In this popup, you can left click an item to select it, middle click an item to delete it, and right click to pin it.
+- You can use the search bar to search for clipboard items. Out of the box, you can search by
   - the app you copied from, for all types of data
   - the date/day/time you copied it from (in `/usr/bin/date` format), for all types of data
   - (fuzzy) any part of the text itself, for textual data.
@@ -125,6 +126,10 @@ Inside the `h` subfolder, each numeral-named folder corresponds to a different i
 Inside each such listing `$i`, there is one folder for each target. For each target, there is a data file and an index file. The data file has, well, the data itself. The index file contains metadata for search purposes. Additionally, for text-based data, the index file also contains a copy of the data. Metadata is duplicated for each target.
 
 Since we are taking target names which are untrusted input and interpreting it as a filesystem entry, we have to reject a few target names. We only allow `[a-zA-Z-/]` in target names, and convert `/` to `\` before writing to the filesystem. This should cover all normal targets.
+
+### How pinning works
+
+Pinned items have the sign of their listing number negated. For example, listing number 3 gets renamed to -3. When you unpin an item, it gets reverted back to 3. In the GUI application, -3 is interpreted as an unsigned number so that it shows up as the "latest" item i.e it gets pinned.
 
 ### Additional files
 
