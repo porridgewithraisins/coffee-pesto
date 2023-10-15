@@ -55,7 +55,7 @@ int what_to_render(const gchar *listing, gchar **chosen_dir) {
         return RENDER_TYPE_FAIL;
     }
 
-    gchar *first_text_entry = NULL, *first_image_entry = NULL;
+    gchar *first_text_entry = NULL;
     const gchar *entry = NULL;
     while ((entry = g_dir_read_name(dir))) {
         if (!entry) {
@@ -66,18 +66,15 @@ int what_to_render(const gchar *listing, gchar **chosen_dir) {
             *chosen_dir = g_build_filename(listing_dir, entry, NULL);
             return RENDER_TYPE_TEXT;
         }
+        if (g_str_equal(entry, "image\\jpeg") || g_str_equal(entry, "image\\png") || g_str_equal(entry, "image\\svg+xml")) {
+            *chosen_dir = g_build_filename(listing_dir, entry, NULL);
+            return RENDER_TYPE_IMAGE;
+        }
         if (!first_text_entry && g_str_has_prefix(entry, "text\\")) {
             first_text_entry = g_build_filename(listing_dir, entry, NULL);
         }
-        if (!first_image_entry && g_str_has_prefix(entry, "image\\")) {
-            first_image_entry = g_build_filename(listing_dir, entry, NULL);
-        }
     }
 
-    if (first_image_entry) {
-        *chosen_dir = first_image_entry;
-        return RENDER_TYPE_IMAGE;
-    }
     if (first_text_entry) {
         *chosen_dir = first_text_entry;
         return RENDER_TYPE_TEXT;
