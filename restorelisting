@@ -1,0 +1,20 @@
+#! /usr/bin/env bash
+
+if [ -z $1 ]; then exit; fi
+
+if test -z $COFFEE_PESTO_DIR; then
+    DIR=$HOME/.coffeepesto
+else
+    DIR=$COFFEE_PESTO_DIR
+
+listing_dir=$DIR/h/$1
+args=
+
+for variant_dir in $(ls $listing_dir); do
+    target=$(echo $variant_dir | tr '\\' /)
+    data_file=$variant_dir/data
+    args=$args' '$target' '$listing_dir/$data_file
+done
+
+touch $DIR/ourpaste
+nohup putcp $args > /dev/null 2>&1 &

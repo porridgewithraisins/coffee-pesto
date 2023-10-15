@@ -1,0 +1,67 @@
+#! /usr/bin/env bash
+
+set -o pipefail
+
+if test -z $COFFEE_PESTO_DIR; then
+    DIR=$HOME/.coffeepesto
+else
+    DIR=$COFFEE_PESTO_DIR
+
+MAXITEMS=20
+ignored_targets="
+ TARGETS TIMESTAMP SAVE_TARGETS MULTIPLE STRING UTF8_STRING TEXT COMPOUND_TEXT text/plain;charset=utf-8
+ application/ico image/bmp image/ico image/icon image/jpeg image/tiff image/vnd.microsoft.icon image/x-bmp
+ image/x-ico image/x-icon image/x-MS-bmp image/x-win-bitmap text/ico x-moz-url
+ "
+
+
+function nextidx {
+    i=$(ls $DIR/h 2>/dev/null | tr -d - | sort -n | tail -1)
+    if [ -z $i ]; then echo 1; else echo $(( (i + 1) % MAXITEMS )); fi
+}
+function isblacklisted {
+    [ -f $DIR/blacklist ] && (xdotool getactivewindow getwindowname | grep -Eiq "$(cat $DIR/blacklist)")
+}
+
+function contains {
+    echo $1 | grep -qE "(^| )$2( |$)"
+}
+
+prev_listing_dir=
+
+while owner=$(waitforcp); do
+    window_name=$(xdotool getwindowname $owner)
+    if [ -f $DIR/pause ] || isblacklisted; then continue; fi
+    if [ -f $DIR/ourpaste ]; then rm $DIR/ourpaste; continue; fi
+
+    new_listing_dir=$DIR/h/$(nextidx)
+    getcp TARGETS | while read unsafe_target; do
+        if contains "$ignored_targets" "$unsafe_target"; then
+            continue
+        fi
+
+        target=$(echo "$unsafe_target" | tr -cd 'a-zA-Z/-')
+        if test -z $target; then
+            echo "Window with id $owner is being shady with their targets :)"
+            continue;
+        fi;
+
+        variant_dir=$new_listing_dir/$(echo $target | tr / '\\')
+        mkdir -p $variant_dir
+
+        getcp $target > $variant_dir/data
+    
+        xdotool getactivewindow getwindowname > $variant_dir/index
+        date +"%a %B %d %I:%M %p %Z %Y" >> $variant_dir/index
+        test -x $DIR/custom-index && $DIR/custom-index $variant_dir
+        if ! file -bi $variant_dir/data | grep -q 'charset=binary'; then
+            cat $variant_dir/data >> $variant_dir/index
+        fi
+    done
+
+    if ! test -z $prev_listing_dir && diff --exclude=index -rq $new_listing_dir $prev_listing_dir | head -1 >/dev/null 2>&1; then
+        rm -r $new_listing_dir
+    fi
+
+    prev_listing_dir=$new_listing_dir
+done
