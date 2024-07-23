@@ -27,8 +27,14 @@ fi
 
 function nextidx {
     i=$(ls $DIR/h 2>/dev/null | tr -d - | sort -n | tail -1)
-    if [ -z $i ]; then echo 1; else echo $(( (i + 1) % MAXITEMS )); fi
+    if [ -z $i ]; then echo 1; else echo $((i + 1)); fi
 }
+
+function ringdelete {
+    local i=$(ls $DIR/h 2>/dev/null | tr -d - | sort -n | head -1)
+    if ! test -z $i; then rm -r $DIR/h/$i; fi;
+}
+
 function isblacklisted {
     [ -f $DIR/blacklist ] && (xdotool getactivewindow getwindowname | grep -Eiq "$(cat $DIR/blacklist)")
 }
@@ -44,7 +50,12 @@ while owner=$(waitforcp); do
     if [ -f $DIR/pause ] || isblacklisted; then continue; fi
     if [ -f $DIR/ourpaste ]; then rm $DIR/ourpaste; continue; fi
 
-    new_listing_dir=$DIR/h/$(nextidx)
+    idx=$(nextidx)
+
+    if test $idx -gt $MAXITEMS; then ringdelete; fi;
+
+    new_listing_dir=$DIR/h/$idx
+
     getcp TARGETS | while read unsafe_target; do
         if contains "$ignored_targets" "$unsafe_target"; then
             continue
