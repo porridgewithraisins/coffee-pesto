@@ -9,7 +9,7 @@ else
 fi
 
 if test -z $COFFEE_PESTO_MAX_ITEMS || ! [[ $COFFEE_PESTO_MAX_ITEMS =~ ^[0-9]+$ ]]; then
-    MAXITEMS=20
+    MAXITEMS=100
 else
     MAXITEMS=$COFFEE_PESTO_MAX_ITEMS
 fi

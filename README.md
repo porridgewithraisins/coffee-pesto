@@ -54,7 +54,7 @@ sudo cp clipdaemon chooselisting restorelisting /usr/local/bin
 
 ### Configure history size
 
-It is 20 by default. Set the `COFFEE_PESTO_MAX_ITEMS` environment variable to change it.
+It is 100 by default. Set the `COFFEE_PESTO_MAX_ITEMS` environment variable to change it.
 
 ### Blacklist windows
 
