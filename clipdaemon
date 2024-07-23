@@ -26,8 +26,8 @@ else
 fi
 
 function nextidx {
-    i=$(ls $DIR/h 2>/dev/null | tr -d - | sort -n | tail -1)
-    if [ -z $i ]; then echo 1; else echo $((i + 1)); fi
+    local i=$(ls $DIR/h 2>/dev/null | tr -d - | sort -n | tail -1)
+    if test -z $i; then echo 1; else echo $((i + 1)); fi
 }
 
 function ringdelete {
@@ -36,7 +36,7 @@ function ringdelete {
 }
 
 function isblacklisted {
-    [ -f $DIR/blacklist ] && (xdotool getactivewindow getwindowname | grep -Eiq "$(cat $DIR/blacklist)")
+    test -f $DIR/blacklist && (xdotool getactivewindow getwindowname | grep -Eiq "$(cat $DIR/blacklist)")
 }
 
 function contains {
@@ -47,8 +47,8 @@ prev_listing_dir=
 
 while owner=$(waitforcp); do
     window_name=$(xdotool getwindowname $owner)
-    if [ -f $DIR/pause ] || isblacklisted; then continue; fi
-    if [ -f $DIR/ourpaste ]; then rm $DIR/ourpaste; continue; fi
+    if test -f $DIR/pause || isblacklisted; then continue; fi
+    if test -f $DIR/ourpaste; then rm $DIR/ourpaste; continue; fi
 
     idx=$(nextidx)
 
