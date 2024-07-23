@@ -60,7 +60,7 @@ while owner=$(waitforcp); do
             continue
         fi
 
-        target=$(echo "$unsafe_target" | tr -cd 'a-zA-Z/-')
+        target=$(echo "$unsafe_target" | cut -d';' -f1 | tr -cd 'a-zA-Z/-')
         if test -z $target; then
             echo "Window with id $owner is being shady with their targets :)"
             continue;
