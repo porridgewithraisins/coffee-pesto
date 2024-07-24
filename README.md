@@ -76,6 +76,11 @@ You can change the default of `~/.coffeepesto` by setting the `COFFEE_PESTO_DIR`
 
 I have ignored certain targets i.e types of data in order to reduce clutter. Most applications work just fine. Suppose you copy something and it doesn't show up in your history. Check if _all_ the available targets for the copied data (Copy it, and run `getcp TARGETS` to check) are being ignored in the `ignored_targets` variable in the `clipdaemon` script. If it is, you can define a `COFFEE_PESTO_IGNORED_TARGETS` environment variable to override it.
 
+## Debugging
+
+ - The `clipdaemon` tool takes a `-V` or `--verbose` argument that will make it log extensively to `~/.coffeepesto/log`
+ - The `chooselisting` tool logs a few things to standard error. You can run it standalone from the terminal and see the logs.
+
 ## Hacking
 
 ### Custom search information

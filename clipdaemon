@@ -25,6 +25,12 @@ else
     ignored_targets=$COFFEE_PESTO_IGNORED_TARGETS
 fi
 
+if test "$1" == "-V" || test "$1" == "--verbose"; then
+    DEBUG=true
+else
+    DEBUG=false
+fi
+
 function nextidx {
     local i=$(ls $DIR/h 2>/dev/null | tr -d - | sort -n | tail -1)
     if test -z $i; then echo 1; else echo $((i + 1)); fi
@@ -43,20 +49,40 @@ function contains {
     echo $1 | grep -qE "(^| )$2( |$)"
 }
 
+function nicedate {
+    date +"%a %B %d %I:%M %p %Z %Y"
+}
+
+function log {
+    local logfile=$DIR/log
+    if $DEBUG; then echo $(nicedate): $owner: "$@" >> $logfile; fi
+}
+
 prev_listing_dir=
 
 while owner=$(waitforcp); do
     if test -f $DIR/pause || isblacklisted; then continue; fi
-    if test -f $DIR/ourpaste; then rm $DIR/ourpaste; continue; fi
+    if test -f $DIR/ourpaste; then rm $DIR/ourpaste; log ourpaste; continue; fi
 
     idx=$(nextidx)
 
-    if test $idx -gt $MAXITEMS; then ringdelete; fi;
+    log idx is $idx
+
+    if test $idx -gt $MAXITEMS; then
+        ringdelete
+        log ringdeleted...
+    fi
 
     new_listing_dir=$DIR/h/$idx
 
+    log new_listing_dir is $new_listing_dir
+
+    found_a_valid_target=false
     getcp TARGETS | while read -r unsafe_target; do
+        log unsafe_target is "$unsafe_target"
+
         if contains "$ignored_targets" "$unsafe_target"; then
+            log ignored "$unsafe_target" as its "in" "$ignored_targets"
             continue
         fi
 
@@ -69,17 +95,23 @@ while owner=$(waitforcp); do
         variant_dir=$new_listing_dir/$(echo $target | tr / '\\')
         mkdir -p $variant_dir
 
+        log variant_dir is $variant_dir
+
         getcp $target > $variant_dir/data
     
         xdotool getactivewindow getwindowname > $variant_dir/index
-        date +"%a %B %d %I:%M %p %Z %Y" >> $variant_dir/index
+        nicedate >> $variant_dir/index
         test -x $DIR/custom-index && $DIR/custom-index $variant_dir
         if ! file -bi $variant_dir/data | grep -q 'charset=binary'; then
+            log assuming $variant_dir as text...
             cat $variant_dir/data >> $variant_dir/index
         fi
+
+	found_a_valid_target=true
     done
 
-    if ! test -z $prev_listing_dir && diff --exclude=index -rq $new_listing_dir $prev_listing_dir | head -1 >/dev/null 2>&1; then
+    if $found_a_valid_target && ! test -z $prev_listing_dir && diff --exclude=index -rq $new_listing_dir $prev_listing_dir 2>/dev/null | head -1 >/dev/null 2>&1; then
+        log $new_listing_dir is the same copy as previous one $perv_listing_dir... deduping...
         rm -r $new_listing_dir
     fi
 
