@@ -100,6 +100,7 @@ while owner=$(waitforcp); do
         getcp $target > $variant_dir/data
     
         xdotool getactivewindow getwindowname > $variant_dir/index
+	xdotool getactivewindow getwindowclassname >> $variant_dir/index
         nicedate >> $variant_dir/index
         test -x $DIR/custom-index && $DIR/custom-index $variant_dir
         if ! file -bi $variant_dir/data | grep -q 'charset=binary'; then
