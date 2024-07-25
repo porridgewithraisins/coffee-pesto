@@ -71,6 +71,22 @@ gboolean onclick(GtkEventBox *eventbox, GdkEventButton *event, gpointer unused) 
     }
 }
 
+gboolean onkeyboard(GtkEventBox *row, GdkEventKey *event, gpointer unused) {
+    if (event->keyval == GDK_KEY_KP_Enter || event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_ISO_Enter) {
+        selectaction(row);
+        return TRUE;
+    }
+    if (event->keyval == GDK_KEY_BackSpace || event->keyval == GDK_KEY_KP_Delete || event->keyval == GDK_KEY_Delete) {
+        deleteaction(row);
+        return TRUE;
+    }
+    if (event->keyval == GDK_KEY_p) {
+        pinaction(row);
+        return TRUE;
+    }
+    return FALSE;
+}
+
 int what_to_render(const gchar *listing, gchar **chosen_dir) {
     gchar *listing_dir = g_build_filename(historydir, listing, NULL);
     GDir *dir = g_dir_open(listing_dir, 0, NULL);
@@ -162,6 +178,7 @@ GtkWidget *render_listing(const gchar *listing) {
     gtk_container_add(eventbox, overlay);
 
     GtkListBoxRow *row = gtk_list_box_row_new();
+    g_signal_connect(row, "key-release-event", onkeyboard, NULL);
     gtk_container_add(row, eventbox);
     g_object_set_data(row, "listing", g_strdup(listing));
     g_object_set_data(row, "index", index_data);
