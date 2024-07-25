@@ -44,7 +44,7 @@ void pinaction(GtkListBoxRow *row) {
     gchar *negative = g_strdup_printf("%ld", -strtol(listing, NULL, 10));
     gchar *negative_listingdir = g_build_filename(historydir, negative, NULL);
     if (rename(listingdir, negative_listingdir) != 0) {
-        fprintf(stderr, "Failed to pin/unpin item\n");
+        fprintf(stderr, "ERROR: Failed to pin/unpin item\n");
         return;
     }
 
@@ -75,7 +75,7 @@ int what_to_render(const gchar *listing, gchar **chosen_dir) {
     gchar *listing_dir = g_build_filename(historydir, listing, NULL);
     GDir *dir = g_dir_open(listing_dir, 0, NULL);
     if (!dir) {
-        fprintf(stderr, "Failed to open listing %s\n", listing);
+        fprintf(stderr, "ERROR: Failed to open listing %s\n", listing);
         return RENDER_TYPE_FAIL;
     }
 
@@ -116,7 +116,7 @@ GtkWidget *render_listing(const gchar *listing) {
             gchar *data_file = g_build_filename(chosen_dir, "data", NULL);
             gchar *text = NULL;
             if (!g_file_get_contents(data_file, &text, NULL, NULL)) {
-                fprintf(stderr, "Failed to read text data from %s\n", data_file);
+                fprintf(stderr, "ERROR: Failed to read text data from %s\n", data_file);
                 return NULL;
             }
             widget = gtk_label_new(g_utf8_substring(text, 0, MIN(strlen(text), 100)));  // dont ask
@@ -128,7 +128,7 @@ GtkWidget *render_listing(const gchar *listing) {
             gchar *data_file = g_build_filename(chosen_dir, "data", NULL);
             GdkPixbuf *buffer = gdk_pixbuf_new_from_file_at_size(data_file, 400, 200, NULL);
             if (!buffer) {
-                fprintf(stderr, "Failed to read image data from %s\n", data_file);
+                fprintf(stderr, "ERROR: Failed to read image data from %s\n", data_file);
                 return NULL;
             }
             widget = gtk_image_new_from_pixbuf(buffer);
@@ -145,7 +145,7 @@ GtkWidget *render_listing(const gchar *listing) {
     gchar *index_file = g_build_filename(chosen_dir, "index", NULL);
     gchar *index_data = NULL;
     if (!g_file_get_contents(index_file, &index_data, NULL, NULL)) {
-        fprintf(stderr, "Failed to read index data from %s\n", index_file);
+        fprintf(stderr, "ERROR: Failed to read index data from %s\n", index_file);
         return NULL;
     }
     GtkOverlay *overlay = gtk_overlay_new();
@@ -212,7 +212,7 @@ int main() {
     historydir = g_build_filename(dir_to_use, "h", NULL);
     GDir *fd = g_dir_open(historydir, 0, NULL);
     if (!fd) {
-        fprintf(stderr, "App directory %s doesn't exist\n", historydir);
+        fprintf(stderr, "ERROR: App directory %s doesn't exist\n", historydir);
         return 1;
     }
 
@@ -220,7 +220,7 @@ int main() {
     GtkListBoxRow *row;
     while ((listing = g_dir_read_name(fd))) {
         if (!(row = render_listing(listing))) {
-            fprintf(stderr, "Failed to render listing %s. Skipping\n", listing);
+            fprintf(stderr, "WARN: Failed to render listing %s. Skipping\n", listing);
             continue;
         }
         gtk_list_box_insert(listbox, row, -1);
