@@ -24,9 +24,16 @@ void deleteaction(GtkListBoxRow *row) {
     const char *listing = g_object_get_data(row, "listing");
 
     gchar *listingdir = g_build_filename(historydir, listing, NULL);
-    if (!g_file_trash(g_file_new_for_path(listingdir), NULL, NULL)) {
-        system(g_strconcat("/bin/rm -r ", listingdir, NULL));
+
+    if (getenv("COFFEE_PESTO_TRASH")) {
+        g_file_trash(g_file_new_for_path(listingdir), NULL, NULL);
+        fprintf(stderr, "INFO: Trashing %s\n", listingdir);
+    } else {
+        gchar *command = g_strconcat("/bin/rm -r ", listingdir, NULL);
+        system(command);
+        fprintf(stderr, "INFO: Deleting %s with command: %s\n", listingdir, command);
     }
+
     gtk_widget_destroy(row);
 }
 

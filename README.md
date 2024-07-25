@@ -52,6 +52,8 @@ sudo cp clipdaemon chooselisting restorelisting /usr/local/bin
   - the date/day/time you copied it from (in `/usr/bin/date` format), for all types of data
   - (fuzzy) any part of the text itself, for textual data.
 
+Note about deletion: If you'd rather the items go to your trash/recycle bin rather than getting permanently deleted, just set the `COFFEE_PESTO_TRASH` environment variable (it can be set to anything), and the deleted items will go to trash. From there, you can restore it and it will all work as expected.
+
 ### Configure history size
 
 It is 100 by default. Set the `COFFEE_PESTO_MAX_ITEMS` environment variable to change it.
