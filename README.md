@@ -72,7 +72,7 @@ Just sync the `~/.coffeepesto` directory with any existing file sync tool - rsyn
 
 ### Change base directory
 
-You can change the default of `~/.coffeepesto` by setting the `COFFEE_PESTO_DIR` environment variable.
+You can change the default of `~/.coffeepesto` by setting the `COFFEE_PESTO_DIR` environment variable. `~/.coffeepesto` is used below for brevity. All of it will respect the environment variable.
 
 ### If copying certain things doesn't work
 
