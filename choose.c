@@ -11,38 +11,55 @@
 const gchar *historydir = NULL;
 
 GtkWidget *render_listing(const gchar *listing);
-gboolean onclick(GtkEventBox *eventbox, GdkEventButton *event, gpointer unused) {
-    const GtkListBoxRow *row = gtk_widget_get_parent(eventbox);
+
+void selectaction(GtkListBoxRow *row) {
+    const GtkListBox *listbox = gtk_widget_get_parent(row);
+    const char *listing = g_object_get_data(row, "listing");
+    printf("%s\n", listing);
+    gtk_main_quit();
+}
+
+void deleteaction(GtkListBoxRow *row) {
     const GtkListBox *listbox = gtk_widget_get_parent(row);
     const char *listing = g_object_get_data(row, "listing");
 
+    gchar *listingdir = g_build_filename(historydir, listing, NULL);
+    if (!g_file_trash(g_file_new_for_path(listingdir), NULL, NULL)) {
+        system(g_strconcat("/bin/rm -r ", listingdir, NULL));
+    }
+    gtk_widget_destroy(row);
+}
+
+void pinaction(GtkListBoxRow *row) {
+    GtkListBox *listbox = gtk_widget_get_parent(row);
+    const char *listing = g_object_get_data(row, "listing");
+    gchar *listingdir = g_build_filename(historydir, listing, NULL);
+    gchar *negative = g_strdup_printf("%ld", -strtol(listing, NULL, 10));
+    gchar *negative_listingdir = g_build_filename(historydir, negative, NULL);
+    if (rename(listingdir, negative_listingdir) != 0) {
+        fprintf(stderr, "Failed to pin/unpin item\n");
+        return;
+    }
+
+    gtk_widget_destroy(row);
+    GtkListBoxRow *updated_row = render_listing(negative);
+    gtk_list_box_insert(listbox, updated_row, -1);
+    gtk_list_box_invalidate_sort(listbox);
+    gtk_widget_show_all(listbox);
+}
+
+
+gboolean onclick(GtkEventBox *eventbox, GdkEventButton *event, gpointer unused) {
+    GtkListBoxRow *row = gtk_widget_get_parent(eventbox);
     switch (event->button) {
         case 1:
-            printf("%s\n", listing);
-            gtk_main_quit();
+            selectaction(row);
             return TRUE;
         case 2:
-            gchar *listingdir = g_build_filename(historydir, listing, NULL);
-            if (!g_file_trash(g_file_new_for_path(listingdir), NULL, NULL)) {
-                system(g_strconcat("/bin/rm -r ", listingdir, NULL));
-            }
-            gtk_widget_destroy(row);
+            deleteaction(row);
             return TRUE;
         case 3:
-            listingdir = g_build_filename(historydir, listing, NULL);
-            gchar *negative = g_strdup_printf("%ld", -strtol(listing, NULL, 10));
-            gchar *negative_listingdir = g_build_filename(historydir, negative, NULL);
-            if (rename(listingdir, negative_listingdir) != 0) {
-                fprintf(stderr, "Failed to pin/unpin item\n");
-                return TRUE;
-            }
-
-            GtkListBox *listbox = gtk_widget_get_parent(row);
-            gtk_widget_destroy(row);
-            GtkListBoxRow *updated_row = render_listing(negative);
-            gtk_list_box_insert(listbox, updated_row, -1);
-            gtk_list_box_invalidate_sort(listbox);
-            gtk_widget_show_all(listbox);
+            pinaction(row);
             return TRUE;
     }
 }
