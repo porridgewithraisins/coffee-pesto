@@ -264,7 +264,7 @@ int main() {
     gtk_window_set_decorated(window, FALSE);
     gtk_window_set_default_size(window, WINDOW_WIDTH, WINDOW_HEIGHT);
     g_signal_connect(window, "focus-out-event", gtk_main_quit, NULL);
-    g_signal_connect(window, "key-press-event", onescape, NULL);
+    g_signal_connect(window, "key-release-event", onescape, NULL);
     gtk_container_add(window, vbox);
     gtk_widget_show_all(window);
 
