@@ -69,6 +69,7 @@ gboolean onclick(GtkEventBox *eventbox, GdkEventButton *event, gpointer unused) 
             pinaction(row);
             return TRUE;
     }
+    return FALSE;
 }
 
 gboolean onkeyboard(GtkEventBox *row, GdkEventKey *event, gpointer unused) {
