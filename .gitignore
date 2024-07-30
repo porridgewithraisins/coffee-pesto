@@ -2,3 +2,5 @@
 bin/
 h/
 a.out
+chooselisting
+.cache/
