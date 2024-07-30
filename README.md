@@ -21,6 +21,7 @@ TODO: insert demo video
 ## How to get
 
 ### From the AUR
+
 TODO: Publish both to AUR.
 
 ```bash
@@ -34,6 +35,7 @@ You will need the standard `xdotool` if you don't already have it. You can insta
 First, install [this](https://github.com/porridgewithraisins/x11cp) xclip alternative. Why this requires an xclip alternative is explained on that page.
 
 Then, install this program like so (linking with gtk+-3.0 libraries)
+
 ```bash
 git clone https://github.com/porridgewithraisins/coffee-pesto
 
@@ -80,8 +82,8 @@ I have ignored certain targets i.e types of data in order to reduce clutter. Mos
 
 ## Debugging
 
- - The `clipdaemon` tool takes a `-V` or `--verbose` argument that will make it log extensively to `~/.coffeepesto/log`
- - The `chooselisting` tool logs a few things to standard error. You can run it standalone from the terminal and see the logs.
+- The `clipdaemon` tool takes a `-V` or `--verbose` argument that will make it log extensively to `~/.coffeepesto/log`
+- The `chooselisting` tool logs a few things to standard error. You can run it standalone from the terminal and see the logs.
 
 ## Hacking
 
@@ -107,7 +109,7 @@ There is also such a thing as "targets", which is usually the type of data. For 
 
 ### Data structures used
 
-```
+```bash
   $ tree ~/.coffeepesto
   ~/.coffeepesto
   └── h
