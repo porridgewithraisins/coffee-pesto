@@ -1,5 +1,7 @@
 # Coffeepesto
 
+current broken, will take till October for me to fix it
+
 A clipboard manager for linux (X11 only) that
 
 - is tiny, but supports a whole lot of features.
